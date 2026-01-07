@@ -35,3 +35,14 @@ cargo test -- --nocapture
 4. **Failed authorization has no side effects**: Unauthorized setter calls do not modify internal state. 
 
 5. **Simple access control**: Uses `if role != Role::Admin` for clarity and readability, appropriate for a binary permission check.
+
+## Test Coverage
+
+The unit tests cover:
+1. ✅ Admin can successfully set the sum
+2. ✅ Non-admin receives an error when attempting to set
+3. ✅ Getter returns the correct stored value
+4. ✅ Getter is accessible to all roles
+5. ✅ Initial state is `None` (unset)
+6. ✅ Multiple updates work correctly
+7. ✅ Failed setter attempts don't modify state

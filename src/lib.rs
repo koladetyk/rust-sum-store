@@ -41,12 +41,20 @@ impl SumStore {
 mod tests {
     use super::*;
 
+    /// Helper to print Option<i32> nicely in test output
+    fn fmt_sum(sum: Option<i32>) -> String {
+        match sum {
+            Some(v) => v.to_string(),
+            None => "<unset>".to_string(),
+        }
+    }
+
     #[test]
     fn admin_can_set_sum() {
         println!("TEST 1: admin_can_set_sum");
 
         let mut store = SumStore::new();
-        println!("Initial sum: {:?}", store.get_sum());
+        println!("Initial sum: {}", fmt_sum(store.get_sum()));
 
         let result = store.set_sum(5, 7, Role::Admin);
         println!("Setter result: {:?}", result);
@@ -54,7 +62,7 @@ mod tests {
         assert!(result.is_ok());
         assert_eq!(store.get_sum(), Some(12));
 
-        println!("Final sum: {:?}", store.get_sum());
+        println!("Final sum: {}", fmt_sum(store.get_sum()));
     }
 
     #[test]
@@ -68,6 +76,8 @@ mod tests {
 
         assert_eq!(result, Err(SumError::NotAuthorized));
         assert_eq!(store.get_sum(), None);
+
+        println!("Sum after failed set: {}", fmt_sum(store.get_sum()));
     }
 
     #[test]
@@ -78,7 +88,7 @@ mod tests {
         store.set_sum(10, 15, Role::Admin).unwrap();
 
         let value = store.get_sum();
-        println!("Retrieved sum: {:?}", value);
+        println!("Retrieved sum: {}", fmt_sum(value));
 
         assert_eq!(value, Some(25));
     }
@@ -91,7 +101,7 @@ mod tests {
         store.set_sum(3, 4, Role::Admin).unwrap();
 
         let value = store.get_sum();
-        println!("Getter accessed without role, value = {:?}", value);
+        println!("Getter accessed without role, value = {}", fmt_sum(value));
 
         assert_eq!(value, Some(7));
     }
@@ -101,7 +111,7 @@ mod tests {
         println!("TEST 5: initial_sum_is_none");
 
         let store = SumStore::new();
-        println!("Initial sum: {:?}", store.get_sum());
+        println!("Initial sum: {}", fmt_sum(store.get_sum()));
 
         assert_eq!(store.get_sum(), None);
     }
@@ -113,11 +123,11 @@ mod tests {
         let mut store = SumStore::new();
 
         store.set_sum(1, 2, Role::Admin).unwrap();
-        println!("After first update: {:?}", store.get_sum());
+        println!("After first update: {}", fmt_sum(store.get_sum()));
         assert_eq!(store.get_sum(), Some(3));
 
         store.set_sum(10, 20, Role::Admin).unwrap();
-        println!("After second update: {:?}", store.get_sum());
+        println!("After second update: {}", fmt_sum(store.get_sum()));
         assert_eq!(store.get_sum(), Some(30));
     }
 
@@ -127,12 +137,14 @@ mod tests {
 
         let mut store = SumStore::new();
         store.set_sum(5, 5, Role::Admin).unwrap();
-        println!("Initial authorized sum: {:?}", store.get_sum());
+        println!("Initial authorized sum: {}", fmt_sum(store.get_sum()));
 
         let result = store.set_sum(100, 100, Role::User);
         println!("Unauthorized attempt result: {:?}", result);
 
         assert_eq!(result, Err(SumError::NotAuthorized));
         assert_eq!(store.get_sum(), Some(10));
+
+        println!("Sum after unauthorized attempt: {}", fmt_sum(store.get_sum()));
     }
 }
