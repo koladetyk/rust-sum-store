@@ -4,8 +4,10 @@
 This project implements a simple Rust library that stores the sum of two integers with
 role-based access control and unit tests.
 
-## How to Run the Tests
+## How to Run the Code
+The library is defined in `src/lib.rs`.
 
+## How to Run the Tests
 The functionality is exercised through unit tests in `src/lib.rs`.
 
 ---
